@@ -21,27 +21,7 @@
 
 ---
 
-## 2. Архитектура
-
-```mermaid
-graph TD
-
-Client --> Nginx
-
-Nginx --> Tasks
-Nginx --> Auth
-Nginx --> Grafana
-
-Tasks --> Auth
-Tasks --> DB
-
-Prometheus --> Tasks
-Grafana --> Prometheus
-````
-
----
-
-## 3. Структура проекта
+## 2. Структура проекта
 
 ```text
 tip2_pr7/
@@ -63,7 +43,7 @@ tip2_pr7/
 
 ---
 
-## 4. Dockerfile (multi-stage)
+## 3. Dockerfile (multi-stage)
 
 Для сервисов используется multi-stage сборка:
 
@@ -131,7 +111,7 @@ ENTRYPOINT ["/app/tasks"]
 
 ---
 
-## 5. Переменные окружения
+## 4. Переменные окружения
 
 Все переменные вынесены в `.env`:
 
@@ -162,7 +142,7 @@ env_file:
 
 ---
 
-## 6. docker-compose
+## 5. docker-compose
 
 Система поднимается через `docker-compose`:
 
@@ -301,7 +281,7 @@ volumes:
 
 ---
 
-## 7. Nginx
+## 6. Nginx
 
 Nginx используется как reverse proxy:
 
@@ -314,7 +294,7 @@ Nginx используется как reverse proxy:
 
 ---
 
-## 8. Проверка работы
+## 7. Проверка работы
 
 ### Получение токена
 
@@ -334,7 +314,7 @@ Nginx используется как reverse proxy:
 
 ---
 
-## 9. Мониторинг
+## 8. Мониторинг
 
 ### Prometheus
 
@@ -356,7 +336,7 @@ admin / admin
 
 ---
 
-## 10. Ответы на контрольные вопросы
+## 9. Ответы на контрольные вопросы
 
 **Чем отличается Docker image от container**
 

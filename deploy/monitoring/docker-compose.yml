@@ -1,0 +1,54 @@
+services:
+  auth:
+    build:
+      context: ../..
+      dockerfile: services/auth/Dockerfile
+    container_name: tip2_pr7_auth
+    environment:
+      AUTH_PORT: 8081
+      AUTH_GRPC_PORT: 50051
+    ports:
+      - "8081:8081"
+      - "50051:50051"
+
+  tasks:
+    build:
+      context: ../..
+      dockerfile: services/tasks/Dockerfile
+    container_name: tip2_pr7_tasks
+    depends_on:
+      - auth
+    environment:
+      TASKS_PORT: 8082
+      AUTH_GRPC_ADDR: auth:50051
+    ports:
+      - "8082:8082"
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: tip2_pr7_prometheus
+    depends_on:
+      - tasks
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:12.2.0
+    container_name: tip2_pr7_grafana
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
